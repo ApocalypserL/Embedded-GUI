@@ -63,4 +63,27 @@ void draw_v_line(int x, int y1, int y2)	//draw a vertical line
 		dot(x, i);
 }
 
-void 
+void drawbmp(*width, *height, *bfOffBits, *buffer)
+{
+	int fpbmp = open("/mnt/bmp", O_RDONLY);
+	lseek(fpbmp, 18, SEEK_SET);
+	read(fpbmp, width, 4);
+	printf("%d\n", *width);
+	read(fpbmp, height, 4);
+	printf("%d\n", *height);
+
+	lseek(fpbmp, 10, SEEK_SET);
+	read(fpbmp, bfOffBits, 4);
+
+	lseek(fpbmp, *(bfOffBits), SEEK_SET);
+
+	for(i = (*height); i >= 0; i--)
+	{
+		for(j = 0; j < (*width); j++)
+		{
+			read(fpbmp, buffer, 3);
+			color = *(buffer) & 0xFFFFFFFF;
+			dot(j, i);
+		}
+	}
+}
